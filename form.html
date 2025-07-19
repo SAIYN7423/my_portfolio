@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Form</title>
+  <style>
+    body {
+  font-family: 'Poppins', sans-serif;
+  background-color: rgb(0, 0, 33);
+  color: white;
+  margin: 0;
+  padding: 2rem;
+}
+
+form {
+  background-color: #121247;
+  color: white;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 500px;
+  margin: 50px auto;
+  box-shadow: 0 0 15px rgba(120, 120, 214, 0.6);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  color: #ffffff;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: none;
+  background-color: #1e1e3f;
+  color: white;
+  font-size: 1rem;
+  box-shadow: 0 0 5px rgba(120, 120, 214, 0.3);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #aaa;
+}
+
+button {
+  background-color: #8b5ff1;
+  color: white;
+  padding: 14px 28px;
+  border: none;
+  width: 35%;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(114, 183, 255, 0.4);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: block;
+  margin: 20px auto 0 auto;
+}
+
+
+button:hover {
+  background-color: #a078ff;
+  transform: scale(1.05);
+}
+
+#response {
+  text-align: center;
+  margin-top: 1.2rem;
+  font-weight: bold;
+}
+
+  </style>
+</head>
+<body>
+
+  <form id="contact-form">
+    <h2>Contact Us</h2>
+    <input type="text" name="name" placeholder="Your Name" required />
+    <input type="email" name="email" placeholder="Your Email" required />
+    <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+    <button type="submit">Submit</button>
+    <div id="response"></div>
+  </form>
+
+  <script>
+    const form = document.getElementById('contact-form');
+    const responseDiv = document.getElementById('response');
+
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxtY5ZCli4C3qIrmEKQuKD7MOiAd4kNXo6Eje5odRMTIYyA-dDg2jBIQ0I0BPqch5reTg/exec';
+
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      responseDiv.textContent = '⏳ Submitting...';
+      responseDiv.style.color = 'white';
+
+      try {
+        const res = await fetch(scriptURL, {
+          method: 'POST',
+          body: formData
+        });
+
+        const text = await res.text();
+
+        if (res.ok) {
+          responseDiv.textContent = '✅ Submission successful!';
+          responseDiv.style.color = 'green';
+          form.reset();
+        } else {
+          responseDiv.textContent = '❌ Submission failed: ' + text;
+          responseDiv.style.color = 'red';
+        }
+      } catch (error) {
+        responseDiv.textContent = '❌ Error: ' + error.message;
+        responseDiv.style.color = 'red';
+      }
+    });
+  </script>
+
+</body>
+</html>
